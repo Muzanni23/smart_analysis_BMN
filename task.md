@@ -28,5 +28,5 @@
         - [x] Create `add_usage` route (GET/POST) in `controllers/main.py`.
         - [x] Create `templates/add_usage.html`.
         - [x] Link "Riwayat Driver" button in `vehicles.html` to new route.
-    - [ ] **Cleanup**
-        - [ ] Remove unused modals from `vehicles.html`.
+    - [x] **Cleanup**
+        - [x] Remove unused modals from `vehicles.html`.

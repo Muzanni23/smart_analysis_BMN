@@ -74,6 +74,10 @@ def edit_vehicle(id):
         v.kondisi_saat_ini = request.form['kondisi']
         v.jarak_tempuh = int(request.form['km'])
         
+        # New Fields
+        v.pengguna_saat_ini = request.form.get('pengguna')
+        v.pejabat = request.form.get('pejabat')
+        
         from services.decision_engine import DecisionEngine
         de = DecisionEngine()
         de.analyze_vehicle(v)
@@ -114,7 +118,9 @@ def vehicles():
             tahun_perolehan=int(request.form['tahun']),
             harga_perolehan=float(request.form['harga']),
             kondisi_saat_ini=request.form['kondisi'],
-            jarak_tempuh=int(request.form['km'])
+            jarak_tempuh=int(request.form['km']),
+            pengguna_saat_ini=request.form.get('pengguna'),
+            pejabat=request.form.get('pejabat')
         )
         try:
             db.session.add(v)

@@ -11,6 +11,10 @@ class Vehicle(db.Model):
     harga_perolehan = db.Column(db.Float, nullable=False)
     kondisi_saat_ini = db.Column(db.String(20), nullable=False) # Baik, Rusak Ringan, Rusak Berat
     
+    # User Info
+    pengguna_saat_ini = db.Column(db.String(100), nullable=True)
+    pejabat = db.Column(db.String(100), nullable=True)
+    
     # ML & Analysis Fields
     jarak_tempuh = db.Column(db.Integer, nullable=True, default=0) # KM
     nilai_buku = db.Column(db.Float, nullable=True) # Nilai penyusutan

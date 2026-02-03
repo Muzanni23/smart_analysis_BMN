@@ -27,6 +27,8 @@
                         <th>Jenis/Merk</th>
                         <th>Tahun</th>
                         <th>Kondisi</th>
+                        <th>Pengguna Saat Ini</th>
+                        <th>Pejabat</th>
                         <th>Prediksi Harga</th>
                         <th>Rekomendasi</th>
                         <th>Aksi</th>
@@ -42,6 +44,8 @@
                         <td><span
                                 class="badge bg-{{ 'success' if v.kondisi_saat_ini == 'Baik' else 'warning' if v.kondisi_saat_ini == 'Rusak Ringan' else 'danger' }}">{{
                                 v.kondisi_saat_ini }}</span></td>
+                        <td>{{ v.pengguna_saat_ini or '-Kosong-' }}</td>
+                        <td>{{ v.pejabat or '-Kosong-' }}</td>
                         <td>Rp {{ "{:,.0f}".format(v.prediksi_nilai_jual or 0) }}</td>
                         <td>
                             {% if v.rekomendasi_lelang == 'Layak Lelang' %}
@@ -138,6 +142,10 @@
                         </div>
                         <div class="col-12"><input type="number" name="km" class="form-control"
                                 placeholder="Jarak Tempuh (KM)"></div>
+                        <div class="col-6"><input type="text" name="pengguna" class="form-control"
+                                placeholder="Pengguna Saat Ini"></div>
+                        <div class="col-6"><input type="text" name="pejabat" class="form-control"
+                                placeholder="Pejabat (NIP/Nama)"></div>
                     </div>
                 </div>
                 <div class="modal-footer">
