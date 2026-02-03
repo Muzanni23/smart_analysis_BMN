@@ -1,0 +1,16 @@
+Flask
+SQLAlchemy
+Flask-SQLAlchemy
+Flask-Login
+Flask-Bcrypt
+pandas
+numpy
+scikit-learn
+xgboost
+openpyxl
+matplotlib
+seaborn
+joblib
+wtforms
+flask-wtf
+gunicorn

@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="fa-solid fa-pen-to-square me-2"></i>Edit Data Kendaraan</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Plat Nomor</label>
+                            <input type="text" name="plat" class="form-control" value="{{ v.plat_no }}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Jenis</label>
+                            <select name="jenis" class="form-select">
+                                <option value="Mobil" {% if v.jenis=='Mobil' %}selected{% endif %}>Mobil</option>
+                                <option value="Motor" {% if v.jenis=='Motor' %}selected{% endif %}>Motor</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Merk/Brand</label>
+                            <input type="text" name="merk" class="form-control" value="{{ v.merk }}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Tipe/Model</label>
+                            <input type="text" name="tipe" class="form-control" value="{{ v.tipe }}" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Tahun Perolehan</label>
+                            <input type="number" name="tahun" class="form-control" value="{{ v.tahun_perolehan }}"
+                                required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Kondisi Fisik</label>
+                            <select name="kondisi" class="form-select">
+                                <option value="Baik" {% if v.kondisi_saat_ini=='Baik' %}selected{% endif %}>Baik
+                                </option>
+                                <option value="Rusak Ringan" {% if v.kondisi_saat_ini=='Rusak Ringan' %}selected{% endif
+                                    %}>Rusak Ringan</option>
+                                <option value="Rusak Berat" {% if v.kondisi_saat_ini=='Rusak Berat' %}selected{% endif
+                                    %}>Rusak Berat</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Jarak Tempuh (KM)</label>
+                            <input type="number" name="km" class="form-control" value="{{ v.jarak_tempuh }}" required>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">Harga Perolehan (Rp)</label>
+                            <input type="number" name="harga" class="form-control" value="{{ v.harga_perolehan }}"
+                                required>
+                        </div>
+                    </div>
+                    <div class="mt-4 text-end">
+                        <a href="{{ url_for('main.vehicles') }}" class="btn btn-secondary me-2">Batal</a>
+                        <button type="submit" class="btn btn-primary"><i class="fa-solid fa-save me-1"></i> Simpan
+                            Perubahan</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

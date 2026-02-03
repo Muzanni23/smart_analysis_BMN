@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h3><i class="fa-solid fa-triangle-exclamation text-warning me-2"></i>Kendaraan Rusak</h3>
+    <div>
+        <a href="{{ url_for('main.export_damaged') }}" class="btn btn-outline-secondary btn-sm"><i
+                class="fa-solid fa-download"></i> Export Excel</a>
+        <a href="{{ url_for('main.dashboard') }}" class="btn btn-outline-primary btn-sm"><i
+                class="fa-solid fa-arrow-left"></i> Kembali</a>
+    </div>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead>
+                    <tr>
+                        <th>Plat No</th>
+                        <th>Jenis/Merk</th>
+                        <th>Tahun</th>
+                        <th>Kondisi</th>
+                        <th>Prediksi Harga</th>
+                        <th>Rekomendasi</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for v in vehicles %}
+                    <tr>
+                        <td class="fw-bold"><a href="{{ url_for('main.vehicle_history', id=v.id) }}"
+                                class="text-decoration-none">{{ v.plat_no }}</a></td>
+                        <td>{{ v.jenis }} - {{ v.merk }}</td>
+                        <td>{{ v.tahun_perolehan }}<br><small class="text-muted">KM: {{ v.jarak_tempuh }}</small></td>
+                        <td><span
+                                class="badge bg-{{ 'warning' if v.kondisi_saat_ini == 'Rusak Ringan' else 'danger' }}">{{
+                                v.kondisi_saat_ini }}</span></td>
+                        <td>Rp {{ "{:,.0f}".format(v.prediksi_nilai_jual or 0) }}</td>
+                        <td>
+                            {% if v.rekomendasi_lelang == 'Layak Lelang' %}
+                            <span class="badge bg-success">Layak</span>
+                            {% else %}
+                            <span class="badge bg-secondary">Tidak Layak</span>
+                            {% endif %}
+                            <br><small class="text-muted">Skor: {{ v.skor_kelayakan }}</small>
+                        </td>
+                        <td>
+                            <div class="btn-group">
+                                <a href="{{ url_for('main.edit_vehicle', id=v.id) }}"
+                                    class="btn btn-sm btn-outline-warning" title="Edit Data"><i
+                                        class="fa-solid fa-pen"></i></a>
+                                <button class="btn btn-sm btn-outline-info" data-bs-toggle="modal"
+                                    data-bs-target="#maintModal{{ v.id }}" title="Perawatan"><i
+                                        class="fa-solid fa-wrench"></i></button>
+                                <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal"
+                                    data-bs-target="#damageModal{{ v.id }}" title="Lapor Kerusakan"><i
+                                        class="fa-solid fa-car-crash"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <!-- Maintenance Modal -->
+                    <div class="modal fade" id="maintModal{{ v.id }}" tabindex="-1">
+                        <div class="modal-dialog">
+                            <form action="{{ url_for('main.add_maintenance', id=v.id) }}" method="POST">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Catat Perawatan - {{ v.plat_no }}</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="mb-2"><input type="date" name="tanggal" class="form-control"
+                                                required></div>
+                                        <div class="mb-2"><input type="text" name="deskripsi" class="form-control"
+                                                placeholder="Deskripsi (opsional)"></div>
+                                        <div class="mb-2"><input type="number" step="0.01" name="biaya"
+                                                class="form-control" placeholder="Biaya" required></div>
+                                    </div>
+                                    <div class="modal-footer"><button type="submit"
+                                            class="btn btn-success">Simpan</button></div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Damage Modal -->
+                    <div class="modal fade" id="damageModal{{ v.id }}" tabindex="-1">
+                        <div class="modal-dialog">
+                            <form action="{{ url_for('main.add_damage', id=v.id) }}" method="POST">
+                                <div class="modal-content">
+                                    <div class="modal-header bg-danger text-white">
+                                        <h5 class="modal-title">Lapor Kerusakan - {{ v.plat_no }}</h5>
+                                        <button type="button" class="btn-close btn-close-white"
+                                            data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="mb-2"><input type="date" name="tanggal" class="form-control"
+                                                required></div>
+                                        <div class="mb-2"><input type="text" name="deskripsi" class="form-control"
+                                                placeholder="Deskripsi Kerusakan"></div>
+                                        <div class="mb-2"><select name="tingkat" class="form-select">
+                                                <option value="Ringan">Ringan</option>
+                                                <option value="Berat">Berat</option>
+                                            </select></div>
+                                        <div class="mb-2"><input type="number" step="0.01" name="biaya"
+                                                class="form-control" placeholder="Estimasi Biaya"></div>
+                                    </div>
+                                    <div class="modal-footer"><button type="submit"
+                                            class="btn btn-danger">Simpan</button></div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

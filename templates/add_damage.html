@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <div class="card shadow-sm border-danger">
+            <div class="card-header bg-danger text-white">
+                <h5 class="mb-0"><i class="fa-solid fa-car-crash me-2"></i>Lapor Kerusakan - {{ v.plat_no }}</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <!-- Form Section -->
+                    <div class="col-md-6 border-end">
+                        <h6 class="text-danger mb-3">Form Laporan Kerusakan</h6>
+                        <form method="POST">
+                            <div class="mb-3">
+                                <label class="form-label">Tanggal Kejadian</label>
+                                <input type="date" name="tanggal" class="form-control" required value="{{ today }}">
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Tingkat Kerusakan</label>
+                                <select name="tingkat" class="form-select" required>
+                                    <option value="Ringan">Ringan (Baret, Penyok Kecil)</option>
+                                    <option value="Sedang">Sedang (Perlu Perbaikan Bengkel)</option>
+                                    <option value="Berat">Berat (Tidak Bisa Jalan/Rusak Parah)</option>
+                                </select>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Deskripsi Kerusakan</label>
+                                <textarea name="deskripsi" class="form-control" rows="3"
+                                    placeholder="Jelaskan detail kerusakan..." required></textarea>
+                            </div>
+
+                            <div class="row g-2 mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">Nama Pelapor</label>
+                                    <input type="text" name="pelapor" class="form-control"
+                                        placeholder="Nama Driver/Staff">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Est. Biaya (Opsional)</label>
+                                    <input type="number" name="biaya" class="form-control" placeholder="Rp 0">
+                                </div>
+                            </div>
+
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-danger"><i
+                                        class="fa-solid fa-exclamation-triangle me-2"></i>Kirim Laporan</button>
+                                <a href="{{ url_for('main.vehicles') }}" class="btn btn-outline-secondary">Batal</a>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- History Section -->
+                    <div class="col-md-6">
+                        <h6 class="text-secondary mb-3">Riwayat Kerusakan</h6>
+                        <div class="list-group list-group-flush" style="max-height: 400px; overflow-y: auto;">
+                            {% if v.damages %}
+                            {% for d in v.damages|sort(attribute='tanggal', reverse=True) %}
+                            <div class="list-group-item">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h6 class="mb-1 text-danger">{{ d.tingkat_kerusakan }}</h6>
+                                    <small class="text-muted">{{ d.tanggal }}</small>
+                                </div>
+                                <p class="mb-1 small">{{ d.deskripsi }}</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <small class="text-muted">Pelapor: {{ d.pelapor or '-' }}</small>
+                                    {% if d.status == 'Selesai' %}
+                                    <span class="badge bg-success">Selesai</span>
+                                    {% else %}
+                                    <span class="badge bg-warning text-dark">Belum Diperbaiki</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            {% endfor %}
+                            {% else %}
+                            <div class="text-center text-muted py-5">
+                                <i class="fa-solid fa-shield-alt fa-3x mb-3"></i>
+                                <p>Tidak ada riwayat kerusakan. Kendaraan aman.</p>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

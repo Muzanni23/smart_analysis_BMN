@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            <div class="card-header bg-white fw-bold">
+                <i class="fa-solid fa-cogs me-2"></i>Pengaturan Kebijakan Lelang
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    <div class="mb-3">
+                        <label class="form-label">Batas Biaya Perawatan (% dari Harga Awal)</label>
+                        <input type="number" step="0.1" name="max_biaya" class="form-control"
+                            value="{{ settings.max_biaya_perawatan_pct }}">
+                        <div class="form-text">Jika total biaya perawatan melebihi persentase ini, kendaraan
+                            direkomendasikan lelang.</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Kondisi Wajib Lelang</label>
+                        <select name="kondisi_rusak" class="form-select">
+                            <option value="Rusak Berat" {% if settings.wajib_lelang_kondisi=='Rusak Berat' %}selected{%
+                                endif %}>Rusak Berat</option>
+                            <option value="Rusak Ringan" {% if settings.wajib_lelang_kondisi=='Rusak Ringan'
+                                %}selected{% endif %}>Rusak Ringan</option>
+                        </select>
+                        <div class="form-text">Kondisi fisik yang otomatis memicu rekomendasi lelang.</div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

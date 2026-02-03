@@ -1,0 +1,257 @@
+/* ============================================
+   Smart BMN - Professional UI (High Contrast)
+   ============================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+/* ============================================
+   Theme Variables (CSS Custom Properties)
+   ============================================ */
+:root {
+    /* DEFAULT: LIGHT MODE (Corporate/Clean) */
+    --bg-primary: #f4f6f9;
+    /* Light Blue-Grey Background */
+    --bg-secondary: #ffffff;
+    /* White for Cards */
+    --bg-elevated: #ffffff;
+    /* Same as secondary for light mode */
+
+    --text-primary: #1e293b;
+    /* Slate 800 - High Contrast */
+    --text-secondary: #64748b;
+    /* Slate 500 */
+    --text-muted: #94a3b8;
+    /* Slate 400 */
+
+    --shadow-light: #ffffff;
+    --shadow-dark: rgba(148, 163, 184, 0.4);
+    /* Soft Slate Shadow */
+
+    --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+
+    /* Accents - Professional Palette */
+    --accent-primary: #2563eb;
+    /* Royal Blue */
+    --accent-secondary: #4f46e5;
+    /* Indigo */
+
+    /* Semantic Colors */
+    --accent-success: #10b981;
+    /* Emerald */
+    --accent-warning: #f59e0b;
+    /* Amber */
+    --accent-danger: #ef4444;
+    /* Red */
+
+    /* Gradients */
+    --gradient-accent: linear-gradient(135deg, #2563eb 0%, #4f46e5 100%);
+    --gradient-success: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+
+/* DARK MODE OVERRIDES */
+[data-theme="dark"] {
+    --bg-primary: #0f172a;
+    /* Slate 900 */
+    --bg-secondary: #1e293b;
+    /* Slate 800 */
+    --bg-elevated: #334155;
+    /* Slate 700 */
+
+    --text-primary: #f8fafc;
+    /* Slate 50 */
+    --text-secondary: #cbd5e1;
+    /* Slate 300 */
+    --text-muted: #94a3b8;
+    /* Slate 400 */
+
+    --shadow-light: rgba(255, 255, 255, 0.05);
+    --shadow-dark: rgba(0, 0, 0, 0.5);
+
+    --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+
+    /* Brighter Accents for Dark Mode */
+    --accent-primary: #60a5fa;
+    /* Blue 400 */
+    --accent-secondary: #818cf8;
+    /* Indigo 400 */
+}
+
+/* ============================================
+   Global Reset & Typography
+   ============================================ */
+body {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: 'Inter', sans-serif;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    color: var(--text-primary);
+    font-weight: 700;
+}
+
+/* ============================================
+   Components
+   ============================================ */
+
+/* Navbar */
+.navbar {
+    background: var(--gradient-accent) !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    padding: 1rem 0;
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    color: white !important;
+}
+
+.nav-link {
+    color: rgba(255, 255, 255, 0.9) !important;
+    font-weight: 500;
+}
+
+.nav-link:hover {
+    color: white !important;
+    transform: translateY(-1px);
+}
+
+/* Cards (Replacing Neumorphism with Clean Modern Cards) */
+.card,
+.stat-card {
+    background-color: var(--bg-secondary);
+    border: none;
+    border-radius: 16px;
+    box-shadow: var(--card-shadow);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    padding: 1.5rem;
+}
+
+/* Hover Animation (User Liked This) */
+.stat-card:hover,
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* Stat Card Specifics */
+.stat-card h3 {
+    font-size: 2rem;
+    font-weight: 800;
+    margin-top: 0.5rem;
+}
+
+.stat-card .text-end i {
+    opacity: 0.2;
+    transition: opacity 0.3s;
+}
+
+.stat-card:hover .text-end i {
+    opacity: 1;
+    color: var(--accent-primary);
+}
+
+/* Buttons */
+.btn-primary {
+    background: var(--gradient-accent);
+    border: none;
+    border-radius: 8px;
+    padding: 0.5rem 1.5rem;
+    font-weight: 600;
+    box-shadow: 0 4px 6px rgba(37, 99, 235, 0.2);
+}
+
+.btn-primary:hover {
+    filter: brightness(110%);
+    transform: translateY(-1px);
+}
+
+/* Tables */
+.table {
+    color: var(--text-primary);
+    border-color: var(--bg-elevated);
+}
+
+.table thead th {
+    background-color: var(--bg-elevated);
+    color: var(--text-primary);
+    border: none;
+    padding: 1rem;
+}
+
+.table tbody td {
+    padding: 1rem;
+    border-bottom: 1px solid var(--bg-elevated);
+    vertical-align: middle;
+}
+
+/* Theme Toggle */
+.theme-toggle {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: var(--card-shadow);
+    z-index: 1000;
+    font-size: 1.25rem;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.theme-toggle:hover {
+    transform: rotate(180deg) scale(1.1);
+}
+
+/* Utilities */
+.text-gradient {
+    background: var(--gradient-accent);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Text Visibility Fixes */
+.text-muted {
+    color: var(--text-secondary) !important;
+}
+
+.text-success {
+    color: var(--accent-success) !important;
+}
+
+.text-warning {
+    color: var(--accent-warning) !important;
+}
+
+.text-danger {
+    color: var(--accent-danger) !important;
+}
+
+/* Animations from before */
+.fade-in {
+    animation: fadeIn 0.8s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

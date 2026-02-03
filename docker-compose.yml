@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  flask:
+    build: .
+    container_name: smart_bmn_app
+    restart: always
+    ports:
+      - "8000:8000"
+    networks:
+      - smart_bmn_net
+    volumes:
+      - db_data:/data
+      - uploads:/app/static/uploads
+      - models:/app/ml/saved_models
+    environment:
+      - PORT=8000
+      - DATABASE_URL=sqlite:////data/smart_bmn.db
+      - SECRET_KEY=prod-secret-key-change-this-in-production
+
+volumes:
+  db_data:
+  uploads:
+  models:
+
+
+networks:
+  smart_bmn_net:
+    driver: bridge

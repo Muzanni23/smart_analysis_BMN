@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="fw-bold text-success">Rekomendasi Lelang</h2>
+        <p class="text-muted">Daftar kendaraan yang memenuhi kriteria untuk dilelang.</p>
+    </div>
+    <div>
+        <a href="{{ url_for('main.export_auction_list') }}" class="btn btn-outline-success"><i
+                class="fa-solid fa-file-excel me-1"></i> Export Excel</a>
+        <a href="{{ url_for('main.dashboard') }}" class="btn btn-outline-secondary"><i
+                class="fa-solid fa-arrow-left me-1"></i> Kembali</a>
+    </div>
+</div>
+
+<div class="card shadow-sm border-0">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Plat Nomor</th>
+                        <th>Aset</th>
+                        <th>Usia (Th)</th>
+                        <th>Kondisi</th>
+                        <th>Nilai Buku</th>
+                        <th>Estimasi Nilai</th>
+                        <th>Limit Lelang (80%)</th>
+                        <th>Skor</th>
+                        <th>Alasan</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in results %}
+                    {% set v = item.vehicle %}
+                    {% set u = item.current_user %}
+                    <tr>
+                        <td class="fw-bold"><a href="{{ url_for('main.vehicle_history', id=v.id) }}"
+                                class="text-decoration-none">{{ v.plat_no }}</a></td>
+                        <td>
+                            <div class="fw-bold">{{ v.merk }}</div>
+                            <small class="text-muted">{{ v.jenis }} - {{ v.tipe }}</small>
+                        </td>
+                        <td class="text-center fw-bold text-primary">
+                            {{ now.year - v.tahun_perolehan }}
+                        </td>
+                        <td>
+                            <span
+                                class="badge bg-{{ 'danger' if 'Berat' in v.kondisi_saat_ini else 'warning' if 'Ringan' in v.kondisi_saat_ini else 'success' }}">
+                                {{ v.kondisi_saat_ini }}
+                            </span>
+                        </td>
+                        <td class="text-end">
+                            <div class="text-muted small">Rp {{ "{:,.0f}".format(v.nilai_buku or 0) }}</div>
+                        </td>
+                        <td class="text-end">
+                            <div class="fw-bold text-success">Rp {{ "{:,.0f}".format(v.prediksi_nilai_jual or 0) }}
+                            </div>
+                        </td>
+                        <td class="text-end">
+                            <div class="fw-bold text-primary">Rp {{ "{:,.0f}".format(v.limit_lelang or 0) }}</div>
+                            <small class="text-muted">Range: Rp {{ "{:,.0f}".format((v.prediksi_nilai_jual or 0) * 0.5)
+                                }} - {{ "{:,.0f}".format((v.prediksi_nilai_jual or 0) * 0.8) }}</small>
+                        </td>
+                        <td><span class="badge bg-success">{{ v.skor_kelayakan }}</span></td>
+                        <td class="text-danger small">{{ v.alasan_rekomendasi }}</td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="6" class="text-center py-5 text-muted">Tidak ada kendaraan yang direkomendasikan
+                            untuk lelang saat ini.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

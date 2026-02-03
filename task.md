@@ -1,0 +1,32 @@
+# Task Checklist - UI & CRUD Enhancements
+
+- [x] **Dashboard**
+    - [x] Link "Total Kendaraan" card to `/vehicles`.
+- [x] **Edit Vehicle Feature**
+    - [x] Create `edit_vehicle` route (GET/POST) in `controllers/main.py`.
+    - [x] Create `templates/edit_vehicle.html` (Form similar to Add but pre-filled).
+    - [x] Update `templates/vehicles.html` actions column with Edit button.
+- [x] **Delete Vehicle Feature**
+    - [x] Create `delete_vehicle` route in `controllers/main.py`.
+    - [x] Update `templates/vehicles.html` actions column with Delete button (w/ confirmation).
+- [x] **Verification**
+    - [x] Verify links work.
+    - [x] Verify Edit updates data and re-analyzes (optional but good).
+    - [x] Verify Delete removes record.
+- [x] **UI Refinements**
+    - [x] Remove Dark Mode toggle from `base.html` (User request: "gak ada fungsinya").
+- [x] **Refactor Vehicle Actions (Modal -> Page)**
+    - [x] **Maintenance Feature**
+        - [x] Create `add_maintenance` route (GET/POST) in `controllers/main.py`.
+        - [x] Create `templates/add_maintenance.html` (Style like `edit_vehicle`).
+        - [x] Link "Perawatan" button in `vehicles.html` to new route.
+    - [x] **Damage Report Feature**
+        - [x] Create `add_damage` route (GET/POST) in `controllers/main.py`.
+        - [x] Create `templates/add_damage.html`.
+        - [x] Link "Lapor Kerusakan" button in `vehicles.html` to new route.
+    - [x] **Usage History Feature**
+        - [x] Create `add_usage` route (GET/POST) in `controllers/main.py`.
+        - [x] Create `templates/add_usage.html`.
+        - [x] Link "Riwayat Driver" button in `vehicles.html` to new route.
+    - [ ] **Cleanup**
+        - [ ] Remove unused modals from `vehicles.html`.

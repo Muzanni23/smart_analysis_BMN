@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <div class="card shadow-sm border-success">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0"><i class="fa-solid fa-road me-2"></i>Catat Riwayat Perjalanan - {{ v.plat_no }}</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <!-- Form Section -->
+                    <div class="col-md-6 border-end">
+                        <h6 class="text-success mb-3">Form Pemakaian Kendaraan</h6>
+                        <form method="POST">
+                            <div class="mb-3">
+                                <label class="form-label">Tanggal Perjalanan</label>
+                                <input type="date" name="tanggal_mulai" class="form-control" required
+                                    value="{{ today }}">
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Tujuan</label>
+                                <input type="text" name="tujuan" class="form-control"
+                                    placeholder="Contoh: Kantor Wilayah, Survey Lokasi" required>
+                            </div>
+
+                            <div class="row g-2 mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">Nama Driver</label>
+                                    <input type="text" name="driver" class="form-control" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Nama Penumpang/Pejabat</label>
+                                    <input type="text" name="pejabat" class="form-control" required>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Jabatan (Penumpang)</label>
+                                <input type="text" name="jabatan" class="form-control"
+                                    placeholder="Contoh: Kepala Bagian Umum" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Keperluan Dinas</label>
+                                <textarea name="keperluan" class="form-control" rows="2"
+                                    placeholder="Jelaskan keperluan perjalanan..."></textarea>
+                            </div>
+
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-success"><i
+                                        class="fa-solid fa-paper-plane me-2"></i>Simpan Perjalanan</button>
+                                <a href="{{ url_for('main.vehicles') }}" class="btn btn-outline-secondary">Batal</a>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- History Section -->
+                    <div class="col-md-6">
+                        <h6 class="text-secondary mb-3">Log Perjalanan Terakhir</h6>
+                        <div class="list-group list-group-flush" style="max-height: 450px; overflow-y: auto;">
+                            {% if v.usage_history %}
+                            {% for u in v.usage_history|sort(attribute='tanggal_mulai', reverse=True) %}
+                            <div class="list-group-item">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h6 class="mb-1">{{ u.tujuan }}</h6>
+                                    <small class="text-muted">{{ u.tanggal_mulai }}</small>
+                                </div>
+                                <p class="mb-1 small">Driver: {{ u.driver_name }} | {{ u.pejabat_name }}</p>
+                                <small class="text-muted">{{ u.keperluan or '-' }}</small>
+                            </div>
+                            {% endfor %}
+                            {% else %}
+                            <div class="text-center text-muted py-5">
+                                <i class="fa-solid fa-map-marked-alt fa-3x mb-3"></i>
+                                <p>Belum ada riwayat perjalanan.</p>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

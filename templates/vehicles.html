@@ -1,0 +1,195 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h3>Data Kendaraan</h3>
+    <div class="d-flex gap-2">
+        <div class="input-group" style="width: 300px;">
+            <span class="input-group-text bg-white"><i class="fa-solid fa-search text-muted"></i></span>
+            <input type="text" id="searchInput" class="form-control" placeholder="Cari plat, merk, jenis, kondisi...">
+        </div>
+        <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#importModal"><i
+                class="fa-solid fa-file-excel"></i> Import</button>
+        <a href="{{ url_for('main.export_excel') }}" class="btn btn-outline-secondary btn-sm"><i
+                class="fa-solid fa-download"></i> Export</a>
+        <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addModal"><i
+                class="fa-solid fa-plus"></i> Tambah</button>
+    </div>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead>
+                    <tr>
+                        <th>Plat No</th>
+                        <th>Jenis/Merk</th>
+                        <th>Tahun</th>
+                        <th>Kondisi</th>
+                        <th>Prediksi Harga</th>
+                        <th>Rekomendasi</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for v in vehicles %}
+                    <tr>
+                        <td class="fw-bold"><a href="{{ url_for('main.vehicle_history', id=v.id) }}"
+                                class="text-decoration-none">{{ v.plat_no }}</a></td>
+                        <td>{{ v.jenis }} - {{ v.merk }}</td>
+                        <td>{{ v.tahun_perolehan }}<br><small class="text-muted">KM: {{ v.jarak_tempuh }}</small></td>
+                        <td><span
+                                class="badge bg-{{ 'success' if v.kondisi_saat_ini == 'Baik' else 'warning' if v.kondisi_saat_ini == 'Rusak Ringan' else 'danger' }}">{{
+                                v.kondisi_saat_ini }}</span></td>
+                        <td>Rp {{ "{:,.0f}".format(v.prediksi_nilai_jual or 0) }}</td>
+                        <td>
+                            {% if v.rekomendasi_lelang == 'Layak Lelang' %}
+                            <span class="badge bg-success">Layak</span>
+                            {% else %}
+                            <span class="badge bg-secondary">Tidak Layak</span>
+                            {% endif %}
+                            <br><small class="text-muted">Skor: {{ v.skor_kelayakan }}</small>
+                        </td>
+                        <td>
+                            <div class="btn-group">
+                                <a href="{{ url_for('main.edit_vehicle', id=v.id) }}"
+                                    class="btn btn-sm btn-outline-warning" title="Edit Data"><i
+                                        class="fa-solid fa-pen"></i></a>
+                                <a href="{{ url_for('main.add_maintenance', id=v.id) }}"
+                                    class="btn btn-sm btn-outline-info" title="Perawatan"><i
+                                        class="fa-solid fa-wrench"></i></a>
+                                <a href="{{ url_for('main.add_damage', id=v.id) }}"
+                                    class="btn btn-sm btn-outline-danger" title="Lapor Kerusakan"><i
+                                        class="fa-solid fa-car-crash"></i></a>
+                                <a href="{{ url_for('main.add_usage', id=v.id) }}"
+                                    class="btn btn-sm btn-outline-success" title="Riwayat Driver"><i
+                                        class="fa-solid fa-road"></i></a>
+                            </div>
+                            <button class="btn btn-sm btn-danger ms-1"
+                                onclick="confirmDelete('{{ url_for('main.delete_vehicle', id=v.id) }}')"
+                                title="Hapus Data"><i class="fa-solid fa-trash"></i></button>
+                        </td>
+                    </tr>
+
+
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Import Modal -->
+<div class="modal fade" id="importModal" tabindex="-1">
+    <div class="modal-dialog">
+        <form action="{{ url_for('main.upload_excel') }}" method="POST" enctype="multipart/form-data">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Import Data Excel</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="text-sm text-muted">Pastikan format kolom: Plat, Jenis, Merk, Tipe, Tahun, Harga, Kondisi,
+                        KM</p>
+                    <input type="file" name="file" class="form-control" accept=".xlsx, .xls">
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success">Upload & Import</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Add Modal -->
+<div class="modal fade" id="addModal" tabindex="-1">
+    <div class="modal-dialog">
+        <form action="{{ url_for('main.vehicles') }}" method="POST">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Tambah Kendaraan</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row g-2">
+                        <div class="col-6"><input type="text" name="plat" class="form-control" placeholder="Plat Nomor"
+                                required></div>
+                        <div class="col-6">
+                            <select name="jenis" class="form-select">
+                                <option value="Mobil">Mobil</option>
+                                <option value="Motor">Motor</option>
+                            </select>
+                        </div>
+                        <div class="col-6"><input type="text" name="merk" class="form-control" placeholder="Merk"
+                                required></div>
+                        <div class="col-6"><input type="text" name="tipe" class="form-control" placeholder="Tipe"
+                                required></div>
+                        <div class="col-6"><input type="number" name="tahun" class="form-control" placeholder="Tahun"
+                                required></div>
+                        <div class="col-6"><input type="number" name="harga" class="form-control"
+                                placeholder="Harga Awal" required></div>
+                        <div class="col-12">
+                            <select name="kondisi" class="form-select">
+                                <option value="Baik">Baik</option>
+                                <option value="Rusak Ringan">Rusak Ringan</option>
+                                <option value="Rusak Berat">Rusak Berat</option>
+                            </select>
+                        </div>
+                        <div class="col-12"><input type="number" name="km" class="form-control"
+                                placeholder="Jarak Tempuh (KM)"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Simpan</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteConfirmModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title"><i class="fa-solid fa-triangle-exclamation me-2"></i>Konfirmasi Hapus</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-center py-4">
+                <h5>Apakah Anda yakin akan menghapus data ini?</h5>
+                <p class="text-muted mb-0">Data perawatan dan kerusakan terkait juga akan terhapus.</p>
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal">Tidak</button>
+                <form id="deleteForm" method="POST" action="">
+                    <button type="submit" class="btn btn-danger px-4">Ya, Hapus</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function confirmDelete(url) {
+        var form = document.getElementById('deleteForm');
+        form.action = url;
+        var modal = new bootstrap.Modal(document.getElementById('deleteConfirmModal'));
+        modal.show();
+    }
+
+    // Search functionality
+    document.getElementById('searchInput').addEventListener('keyup', function () {
+        var filter = this.value.toLowerCase();
+        var rows = document.querySelectorAll('tbody tr');
+
+        rows.forEach(function (row) {
+            var text = row.textContent.toLowerCase();
+            if (text.includes(filter)) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <div class="card shadow-sm">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0"><i class="fa-solid fa-wrench me-2"></i>Catat Perawatan - {{ v.plat_no }}</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <!-- Form Section -->
+                    <div class="col-md-6 border-end">
+                        <h6 class="text-primary mb-3">Input Data Perawatan</h6>
+                        <form method="POST">
+                            <div class="mb-3">
+                                <label class="form-label">Tujuan Perawatan / Perbaikan</label>
+                                <select name="damage_id" class="form-select"
+                                    onchange="this.form.jenis.value = this.options[this.selectedIndex].text.includes('[') ? 'Perbaikan Kerusakan' : ''">
+                                    <option value="None">-- Service Rutin / Berkala --</option>
+                                    {% for d in v.damages %}
+                                    {% if d.status != 'Selesai' %}
+                                    <option value="{{ d.id }}">[{{ d.tingkat_kerusakan }}] {{ d.deskripsi }} ({{
+                                        d.tanggal }})</option>
+                                    {% endif %}
+                                    {% endfor %}
+                                </select>
+                                <div class="form-text">Pilih kerusakan jika ini adalah perbaikan atas laporan kerusakan.
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Jenis Tindakan</label>
+                                <input type="text" name="jenis" class="form-control"
+                                    placeholder="Contoh: Ganti Oli & Tune Up" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Biaya (Rp)</label>
+                                <input type="number" name="biaya" class="form-control" placeholder="0" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Keterangan Tambahan</label>
+                                <textarea name="keterangan" class="form-control" rows="3"
+                                    placeholder="Catatan bengkel atau detail sparepart"></textarea>
+                            </div>
+
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-primary"><i
+                                        class="fa-solid fa-save me-2"></i>Simpan Perawatan</button>
+                                <a href="{{ url_for('main.vehicles') }}" class="btn btn-outline-secondary">Batal</a>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- History Section -->
+                    <div class="col-md-6">
+                        <h6 class="text-secondary mb-3">Riwayat Perawatan Terakhir</h6>
+                        <div class="list-group list-group-flush" style="max-height: 400px; overflow-y: auto;">
+                            {% if v.maintenances %}
+                            {% for m in v.maintenances|sort(attribute='tanggal', reverse=True) %}
+                            <div class="list-group-item">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h6 class="mb-1">{{ m.jenis_perawatan }}</h6>
+                                    <small class="text-muted">{{ m.tanggal }}</small>
+                                </div>
+                                <p class="mb-1 small">{{ m.keterangan or '-' }}</p>
+                                <small class="fw-bold text-success">Rp {{ "{:,.0f}".format(m.biaya) }}</small>
+                            </div>
+                            {% endfor %}
+                            {% else %}
+                            <div class="text-center text-muted py-5">
+                                <i class="fa-solid fa-clipboard-check fa-3x mb-3"></i>
+                                <p>Belum ada riwayat perawatan.</p>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
